@@ -1,0 +1,303 @@
+{
+	"info": {
+		"_postman_id": "a627a397-6b8e-4618-bc90-be32d1b711f8",
+		"name": "Spring OAuth2 ",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "[1] auth-service: OAuth request to get access_token",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "acmesecret",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "acme",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8899/userauth/oauth/token?grant_type=password&username=dave&password=secret&redirect_uri=http://localhost:8090/index.html",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8899",
+					"path": [
+						"userauth",
+						"oauth",
+						"token"
+					],
+					"query": [
+						{
+							"key": "grant_type",
+							"value": "password"
+						},
+						{
+							"key": "username",
+							"value": "dave"
+						},
+						{
+							"key": "password",
+							"value": "secret"
+						},
+						{
+							"key": "redirect_uri",
+							"value": "http://localhost:8090/index.html"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[1.1] auth-service: Get user principal",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MjU3Mzc4MTksInVzZXJfbmFtZSI6ImRhdmUiLCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwianRpIjoiOWM0NGY1N2EtMTZkYy00ODU1LWFhYjctNzA5ZDJlYTcxODc4IiwiY2xpZW50X2lkIjoiYWNtZSIsInNjb3BlIjpbIm9wZW5pZCJdfQ.bI4T59jv51anYigRDJVgBJUshHRxpzRBYfzn00DuVuqLUcRo5u8soRJaHhPGaaCyIGm8aIajneX6syu43BsKo3z1Lm9nVnYWHI1lYnvOwi0frAcIGdMGu7c1ecbbsQbTwQDdAYm9U-_VltsWAeFwuPh9INv_VD-eVbNNJvmBbLH1P1rWHz8E7fH-YDPEnevU89jPMb4nM9UbaBpwZtPj2elg2_Qyn5wpD3zwHUFk5zJrmZuInZ1SkaKvGM_o3k8kmU6COK0mwYrBRZe9kNG_vwF_soR4lmMtR8W3XbnrSpb_9QTZ8Bf64-aRcP93TsPXr8fngl_4UUK6hp1UtMLyMw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8899/userauth/me",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8899",
+					"path": [
+						"userauth",
+						"me"
+					]
+				},
+				"description": "Return the principal identifying the logged in user.\n\n* REST endpoint to be used by other micro-services using SSO to validate the authentication of the logged in user.\n\n* Since the \"me\" endpoint needs to be protected to be accessed only after the OAuth2 authentication is successful; the OAuth2 server also becomes a resource server."
+			},
+			"response": []
+		},
+		{
+			"name": "[2.1] account-service: Get account by owner name",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MjU3Mzc4MTksInVzZXJfbmFtZSI6ImRhdmUiLCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwianRpIjoiOWM0NGY1N2EtMTZkYy00ODU1LWFhYjctNzA5ZDJlYTcxODc4IiwiY2xpZW50X2lkIjoiYWNtZSIsInNjb3BlIjpbIm9wZW5pZCJdfQ.bI4T59jv51anYigRDJVgBJUshHRxpzRBYfzn00DuVuqLUcRo5u8soRJaHhPGaaCyIGm8aIajneX6syu43BsKo3z1Lm9nVnYWHI1lYnvOwi0frAcIGdMGu7c1ecbbsQbTwQDdAYm9U-_VltsWAeFwuPh9INv_VD-eVbNNJvmBbLH1P1rWHz8E7fH-YDPEnevU89jPMb4nM9UbaBpwZtPj2elg2_Qyn5wpD3zwHUFk5zJrmZuInZ1SkaKvGM_o3k8kmU6COK0mwYrBRZe9kNG_vwF_soR4lmMtR8W3XbnrSpb_9QTZ8Bf64-aRcP93TsPXr8fngl_4UUK6hp1UtMLyMw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8081/account-service/account/dave",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"account-service",
+						"account",
+						"dave"
+					]
+				},
+				"description": "Get a protected resource using an access token"
+			},
+			"response": []
+		},
+		{
+			"name": "[2.1] account-service: Get account by 'owner' name",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MjU3Mzc4MTksInVzZXJfbmFtZSI6ImRhdmUiLCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwianRpIjoiOWM0NGY1N2EtMTZkYy00ODU1LWFhYjctNzA5ZDJlYTcxODc4IiwiY2xpZW50X2lkIjoiYWNtZSIsInNjb3BlIjpbIm9wZW5pZCJdfQ.bI4T59jv51anYigRDJVgBJUshHRxpzRBYfzn00DuVuqLUcRo5u8soRJaHhPGaaCyIGm8aIajneX6syu43BsKo3z1Lm9nVnYWHI1lYnvOwi0frAcIGdMGu7c1ecbbsQbTwQDdAYm9U-_VltsWAeFwuPh9INv_VD-eVbNNJvmBbLH1P1rWHz8E7fH-YDPEnevU89jPMb4nM9UbaBpwZtPj2elg2_Qyn5wpD3zwHUFk5zJrmZuInZ1SkaKvGM_o3k8kmU6COK0mwYrBRZe9kNG_vwF_soR4lmMtR8W3XbnrSpb_9QTZ8Bf64-aRcP93TsPXr8fngl_4UUK6hp1UtMLyMw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8081/account-service/account/afshar",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"account-service",
+						"account",
+						"afshar"
+					]
+				},
+				"description": "Get a protected resource using an access token"
+			},
+			"response": []
+		},
+		{
+			"name": "[2.2] account-service: transaction to WITHDRAW amount",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MjU3Mzc4MTksInVzZXJfbmFtZSI6ImRhdmUiLCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwianRpIjoiOWM0NGY1N2EtMTZkYy00ODU1LWFhYjctNzA5ZDJlYTcxODc4IiwiY2xpZW50X2lkIjoiYWNtZSIsInNjb3BlIjpbIm9wZW5pZCJdfQ.bI4T59jv51anYigRDJVgBJUshHRxpzRBYfzn00DuVuqLUcRo5u8soRJaHhPGaaCyIGm8aIajneX6syu43BsKo3z1Lm9nVnYWHI1lYnvOwi0frAcIGdMGu7c1ecbbsQbTwQDdAYm9U-_VltsWAeFwuPh9INv_VD-eVbNNJvmBbLH1P1rWHz8E7fH-YDPEnevU89jPMb4nM9UbaBpwZtPj2elg2_Qyn5wpD3zwHUFk5zJrmZuInZ1SkaKvGM_o3k8kmU6COK0mwYrBRZe9kNG_vwF_soR4lmMtR8W3XbnrSpb_9QTZ8Bf64-aRcP93TsPXr8fngl_4UUK6hp1UtMLyMw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"disabled": true
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"owner\":\"dave\", \"guid\":\"1211\", \"transactionAmount\":200.65}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/account-service/account/withdraw/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"account-service",
+						"account",
+						"withdraw",
+						""
+					]
+				},
+				"description": "Get a protected resource using an access token"
+			},
+			"response": []
+		},
+		{
+			"name": "[3.1] transaction-service: CREDIT transaction",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MjU3Mzc4MTksInVzZXJfbmFtZSI6ImRhdmUiLCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwianRpIjoiOWM0NGY1N2EtMTZkYy00ODU1LWFhYjctNzA5ZDJlYTcxODc4IiwiY2xpZW50X2lkIjoiYWNtZSIsInNjb3BlIjpbIm9wZW5pZCJdfQ.bI4T59jv51anYigRDJVgBJUshHRxpzRBYfzn00DuVuqLUcRo5u8soRJaHhPGaaCyIGm8aIajneX6syu43BsKo3z1Lm9nVnYWHI1lYnvOwi0frAcIGdMGu7c1ecbbsQbTwQDdAYm9U-_VltsWAeFwuPh9INv_VD-eVbNNJvmBbLH1P1rWHz8E7fH-YDPEnevU89jPMb4nM9UbaBpwZtPj2elg2_Qyn5wpD3zwHUFk5zJrmZuInZ1SkaKvGM_o3k8kmU6COK0mwYrBRZe9kNG_vwF_soR4lmMtR8W3XbnrSpb_9QTZ8Bf64-aRcP93TsPXr8fngl_4UUK6hp1UtMLyMw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"guid\":\"1211\", \"accountId\":2, \"type\":\"CREDIT\", \"amount\":100.555}"
+				},
+				"url": {
+					"raw": "http://localhost:8082/transaction-service/transaction/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"transaction-service",
+						"transaction",
+						""
+					]
+				},
+				"description": "Perform a CREDIT transaction"
+			},
+			"response": []
+		},
+		{
+			"name": "[3.2] transaction-service: Get transaction by id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MjU3Mzc4MTksInVzZXJfbmFtZSI6ImRhdmUiLCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwianRpIjoiOWM0NGY1N2EtMTZkYy00ODU1LWFhYjctNzA5ZDJlYTcxODc4IiwiY2xpZW50X2lkIjoiYWNtZSIsInNjb3BlIjpbIm9wZW5pZCJdfQ.bI4T59jv51anYigRDJVgBJUshHRxpzRBYfzn00DuVuqLUcRo5u8soRJaHhPGaaCyIGm8aIajneX6syu43BsKo3z1Lm9nVnYWHI1lYnvOwi0frAcIGdMGu7c1ecbbsQbTwQDdAYm9U-_VltsWAeFwuPh9INv_VD-eVbNNJvmBbLH1P1rWHz8E7fH-YDPEnevU89jPMb4nM9UbaBpwZtPj2elg2_Qyn5wpD3zwHUFk5zJrmZuInZ1SkaKvGM_o3k8kmU6COK0mwYrBRZe9kNG_vwF_soR4lmMtR8W3XbnrSpb_9QTZ8Bf64-aRcP93TsPXr8fngl_4UUK6hp1UtMLyMw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"guid\":\"1211\", \"accountId\":2, \"type\":\"CREDIT\", \"amount\":100.555}"
+				},
+				"url": {
+					"raw": "http://localhost:8082/transaction-service/transaction/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"transaction-service",
+						"transaction",
+						"1"
+					]
+				},
+				"description": "Perform a CREDIT transaction"
+			},
+			"response": []
+		}
+	]
+}
