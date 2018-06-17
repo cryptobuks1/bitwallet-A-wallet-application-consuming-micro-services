@@ -40,6 +40,7 @@ public class TransactionController {
 
 	/**
 	 * Fetch a transaction with the specified transaction id.
+	 * http://localhost:8082/transaction-service/transaction/1
 	 * 
 	 * @param id The id of the transaction to be found.
 	 * @return 	The transaction if found.

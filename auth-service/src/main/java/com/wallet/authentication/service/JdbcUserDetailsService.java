@@ -1,60 +1,38 @@
 package com.wallet.authentication.service;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Arrays;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import com.wallet.authentication.model.User;
+import com.wallet.authentication.repository.UserRepository;
+
 @Configuration
 public class JdbcUserDetailsService implements UserDetailsService {
-
-	private List<UserDetailsService> userDetailsServices = new LinkedList<>();
-
-	public JdbcUserDetailsService() {
-		// Default constructor
-	}
+	
+	@Autowired
+	private UserRepository userRepository;
 
 	/**
-	 * Add the default user detail service or any other user detail service so
-	 * that we can validate the user.
-	 *
-	 * @param userDetailsServices
-	 */
-	public void addService(UserDetailsService userDetailsService) {
-		userDetailsServices.add(userDetailsService);
-	}
-
-	/**
-	 * Locates the user based on the username. Case insensitive for now :-( 
-	 * so the <code>UserDetails</code> returned may have a username of different case.
+	 * Finds the user based on username and returns it.
 	 *
 	 * @param username 	The username identifying the user whose data is required.
-	 *
-	 * @return 	A fully populated user record (never <code>null</code>)
-	 *
-	 * @throws UsernameNotFoundException if the user could not be found or the user has no
-	 * GrantedAuthority
+	 * @return {@link User}	A fully populated user record.
 	 */
 	@Override
-	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-		if (userDetailsServices != null) {
-			for (UserDetailsService userDetailsService : userDetailsServices) {
-				try {
-					final UserDetails details = userDetailsService.loadUserByUsername(userName);
-					if (details != null) {
-						return details;
-					}
-				} catch (UsernameNotFoundException exception) {
-					assert exception != null;
-				} catch (Exception exception) {
-					throw exception;
-				}
-			}
-		}
-
-		throw new UsernameNotFoundException("Unknown user");
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		User user = userRepository.findUser(username);
+		GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole());
+		UserDetails userDetails = (UserDetails) new org.springframework.security.core.userdetails.User(
+													user.getUsername(), 
+													user.getPassword(), 
+													Arrays.asList(authority));
+		return userDetails;
 	}
 }

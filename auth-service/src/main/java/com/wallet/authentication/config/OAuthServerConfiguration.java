@@ -2,8 +2,6 @@ package com.wallet.authentication.config;
 
 import java.security.KeyPair;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +19,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
+import com.wallet.authentication.service.JdbcClientDetailsService;
 import com.wallet.authentication.service.JdbcUserDetailsService;;
 
 /**
@@ -30,43 +29,39 @@ import com.wallet.authentication.service.JdbcUserDetailsService;;
  * 
  * @author Afshar Ahmed
  */
-
 @Configuration
 @EnableAuthorizationServer
 public class OAuthServerConfiguration extends AuthorizationServerConfigurerAdapter {
+	
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
 	@Autowired
-	private DataSource dataSource;
-
-	@Autowired
 	private JdbcUserDetailsService jdbcUserDetailsService;
-
+	
+	@Autowired
+	private JdbcClientDetailsService jdbcClientDetailsService;
+	
 	@Bean
 	public JwtAccessTokenConverter jwtAccessTokenConverter() {
 		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-		
+		//TODO Remove all hardcodings
 		//Keypair is the alias name -> afsharkeystore.jks / password / authkey
-		KeyPair keyPair = new KeyStoreKeyFactory(new ClassPathResource("afsharkeystore.jks"), "password".toCharArray())
-				.getKeyPair("authkey");
+		KeyPair keyPair = new KeyStoreKeyFactory(new ClassPathResource("afsharkeystore.jks"), "password".toCharArray()).getKeyPair("authkey");
 		converter.setKeyPair(keyPair);
 		return converter;
 	}
 
 	@Override
+	public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
+		oauthServer
+			.tokenKeyAccess("permitAll()")
+			.checkTokenAccess("isAuthenticated()");//or permitAll()
+	}
+	
+	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-		clients.jdbc(this.dataSource)
-			.withClient("acme")
-			.secret("acmesecret")
-			.authorizedGrantTypes("authorization_code", "client_credentials", "password", "implicit", "refresh_token")
-			.scopes("openid")
-//		.and()
-//		.withClient("sampleClientId")
-//        .authorizedGrantTypes("implicit")
-//        .scopes("read")
-//        .autoApprove(true)
-		;
+		clients.withClientDetails(jdbcClientDetailsService);
 	}
 
 	@Override
@@ -74,54 +69,26 @@ public class OAuthServerConfiguration extends AuthorizationServerConfigurerAdapt
 		endpoints
 			.authenticationManager(authenticationManager)
 			.accessTokenConverter(jwtAccessTokenConverter())
-			.userDetailsService(this.jdbcUserDetailsService);
-	}
-
-	@Override
-	public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
-		oauthServer
-			.tokenKeyAccess("permitAll()")
-			.checkTokenAccess("isAuthenticated()");
+			.userDetailsService(jdbcUserDetailsService);
 	}
 
 	/**
-	 * Configure the {@link AuthenticationManagerBuilder} with initial
-	 * configuration to setup users.
+	 * Setup {@link AuthenticationManagerBuilder} with initial configuration.
 	 * 
 	 * Higher priority, since lesser ordered value indicate higher priority.
 	 * {@link Ordered#LOWEST_PRECEDENCE} has value as {@link Integer#MAX_VALUE}
 	 * 
 	 * @author Afshar Ahmed
-	 *
 	 */
 	@Configuration
 	@Order(Ordered.LOWEST_PRECEDENCE - 30)
 	protected static class AuthenticationManagerConfiguration extends GlobalAuthenticationConfigurerAdapter {
-
-		@Autowired
-		private DataSource dataSource;
-
 		@Autowired
 		private JdbcUserDetailsService jdbcUserDetailsService;
 
-		/**
-		 * Setup 2 users with different roles
-		 */
 		@Override
 		public void init(AuthenticationManagerBuilder auth) throws Exception {
-			// @formatter:off
-			auth.jdbcAuthentication()
-				.dataSource(dataSource)
-				.withUser("dave").password("secret").roles("USER")
-				.and()
-				.withUser("afshar").password("password").roles("ADMIN", "USER")
-				.and()
-				.getUserDetailsService();
-			// @formatter:on
-
-			// Add the default service
-			jdbcUserDetailsService.addService(auth.getDefaultUserDetailsService());
+			auth.userDetailsService(jdbcUserDetailsService);
 		}
 	}
-
 }
