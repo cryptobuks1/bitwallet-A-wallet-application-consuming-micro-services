@@ -15,26 +15,24 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
- * Configuration that sets up the OAuth2 client operation for making calls to
- * the transaction-service<br>
+ * Configuration that sets up the OAuth2 client operation for making calls to the transaction-service<br>
  * <br>
- * 
  * We add a {@link HandlerInterceptor} to add the JWT token relayed by the Zuul
  * gateway into the OAuth2RestTemplate. This needs to be added manually to the
  * WebMvc intercepter chain because of an existing bug in Spring boot 1.5.3.
  * 
  * @author Afshar Ahmed
  */
-//@Configuration
-//@ImportAutoConfiguration(classes = { ResourceServerTokenRelayAutoConfiguration.class })
+@Configuration
+@ImportAutoConfiguration(classes = { ResourceServerTokenRelayAutoConfiguration.class })
 public class OAuthClientConfiguration extends WebMvcConfigurerAdapter {
 
 	/**
 	 * Issues with JWT token not getting relayed by the resource server
 	 * {@linkplain https://stackoverflow.com/questions/43566515/spring-security-oauth2-jwt-token-relay-issue}
 	 */
-	//@Autowired
-	//@Qualifier("tokenRelayRequestInterceptor")
+	@Autowired
+	@Qualifier("tokenRelayRequestInterceptor")
 	HandlerInterceptor tokenRelayHandlerInterceptor;
 
 	/**
@@ -43,8 +41,8 @@ public class OAuthClientConfiguration extends WebMvcConfigurerAdapter {
 	 * @param oauth2ClientContext
 	 * @return
 	 */
-	//@Bean
-	//@LoadBalanced
+	@Bean
+	@LoadBalanced
 	public OAuth2RestTemplate restTemplate(OAuth2ProtectedResourceDetails resource, OAuth2ClientContext context) {
 		return new OAuth2RestTemplate(resource, context);
 	}

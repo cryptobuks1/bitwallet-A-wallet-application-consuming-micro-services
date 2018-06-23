@@ -1,7 +1,9 @@
-package com.wallet.account.domain;
+package com.wallet.account.dto;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
 
@@ -14,10 +16,18 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 @JsonRootName("Transaction")
 public class TransactionDTO { 
     private Long id;
+    
+    @NotNull
     private String guid;
+    
+    @NotNull
     private Long accountId;
+    
+    @NotNull
     private BigDecimal amount;
+    
     private TransactionType type;  
+    
     private Timestamp createdAt;
 
     /**

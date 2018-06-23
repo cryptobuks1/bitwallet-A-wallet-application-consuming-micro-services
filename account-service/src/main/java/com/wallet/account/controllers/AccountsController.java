@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wallet.account.domain.Account;
+import com.wallet.account.dto.TransactionDTO;
 import com.wallet.account.exceptions.AccountNotFoundException;
 import com.wallet.account.services.AccountService;
 
@@ -37,9 +38,9 @@ public class AccountsController {
 	 * @return 	The account if found.
 	 * @throws 	AccountNotFoundException, if not found.
 	 */
-	@RequestMapping(value = "/account/{owner}", produces = "application/json; charset=UTF-8")
-	public ResponseEntity<Account> getAccount(@PathVariable("owner") String ownerName) {
-		return accountService.findByOwnerName(ownerName);
+	@RequestMapping(value = "/account/{id}", produces = "application/json; charset=UTF-8")
+	public ResponseEntity<Account> getAccount(@PathVariable("id") final Long id) {
+		return accountService.findById(id);
 	}
 	
 	/**
@@ -57,16 +58,16 @@ public class AccountsController {
 	 * REST endpoint to withdraw amount from a given account.
 	 */
 	@RequestMapping(value = "/account/withdraw/", method = RequestMethod.PATCH, produces = "application/json; charset=UTF-8")
-	public ResponseEntity<?> withdrawAmount(@Valid @RequestBody TransactionWrapper transactionWrapper) {
-		return accountService.withdrawAmount(transactionWrapper);
+	public ResponseEntity<?> withdrawAmount(@Valid @RequestBody TransactionDTO transactionDto) {
+		return accountService.withdrawAmount(transactionDto);
 	}
 	
 	/**
 	 * REST endpoint to deposit amount in a given account.
 	 */
 	@RequestMapping(value = "/account/deposit/", method = RequestMethod.PATCH, produces = "application/json; charset=UTF-8")
-	public ResponseEntity<?> depositAmount(@Valid @RequestBody TransactionWrapper transactionWrapper) {
-		return accountService.depositAmount(transactionWrapper);
+	public ResponseEntity<?> depositAmount(@Valid @RequestBody TransactionDTO transactionDto) {
+		return accountService.depositAmount(transactionDto);
 	}
 	
 }

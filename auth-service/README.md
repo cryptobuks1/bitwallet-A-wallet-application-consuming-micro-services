@@ -59,6 +59,8 @@ We use a JWT (Json Web Token) to pass the access token wherein the token itself 
  		```
     * Provide authentication information user `dave` and password `secret`.
     * Click on the "Approve" button to provide permission for the OAuth server to provide token to the client.
+    * If you have the [web-portal](../web-portal/README.md) project running, then you should land on the index page 
+      with the OAuth code in the URL; something like `http://localhost:8090/index.html?code=RQrQTU#/`
     * Once you have the access code, you can get the actual OAuth access token by making the following POST request using curl.
     ```
     $ curl acme:acmesecret@localhost:8899/userauth/oauth/token -d grant_type=authorization_code -d client_id=acme -d redirect_uri=http://localhost:8090/index.html -d code=5YBSBs
@@ -128,9 +130,3 @@ We use a JWT (Json Web Token) to pass the access token wherein the token itself 
 	```     	
 	curl -H "Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDAzMzQ1NzksInVzZXJfbmFtZSI6ImRhdmUiLCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwianRpIjoiZjg4MTgxN2QtODVkOS00ZGY2LWFmYzctNWY3NWIzZjk5MzAwIiwiY2xpZW50X2lkIjoiYWNtZSIsInNjb3BlIjpbIm9wZW5pZCJdfQ.ay-nV8fYnqyhmljh-w7NNs_wZG01FlKB3ZeicqKGaaZDm8f5IE4aTfqRWKvpOBiMlNe-z9ds9Fa-zIbhZiEuI00CTcUNQo-xyt-ynLmLXzs18ZeUj48kQ4z-q3Q0i3WEL3IOu3HcrOvHrDGoS5s71C1zIWnkCtlWC0WlmmxzyLLyBsNOOIeTPOccc1zdia9tflwxH1ovwmzi5pqptPPyC6jzkGlnWHVlA3_FzJFqI49WLuL8RD-x56_FCZYu0fDZ_IvQEnYOVa-sgJ3JeuwghbiNSHbHiPl808Oz87aQtsl-69Dvs8AcMNUyoGYwMmFBy7Bt3fHlhnENTWeDTuptxw" http://localhost:8081/user	
 	```
-
-
-## Important!
-* I have attached the postman API collection for the whole application at <app-root>/wallet-postman-api directory :-)
-
- 	

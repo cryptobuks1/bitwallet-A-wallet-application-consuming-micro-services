@@ -45,7 +45,7 @@ public class TransactionController {
 	 * @param id The id of the transaction to be found.
 	 * @return 	The transaction if found.
 	 */
-	@RequestMapping(value = "/transaction/{id}", produces = "application/json; charset=UTF-8")
+	@RequestMapping(value = "/transaction/{id}", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
 	public ResponseEntity<Transaction> getTransactionDetails(@PathVariable("id") Long id) {
 		Optional<Transaction> transaction = transactionRepository.findById(id);
 		Optional.ofNullable(transaction)

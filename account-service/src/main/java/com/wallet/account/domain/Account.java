@@ -30,8 +30,8 @@ public class Account implements Serializable {
 //	@Getter(AccessLevel.NONE)  
 	private BigDecimal balance;
 	
-	public Account(String owner, BigDecimal balance) {
-		this.owner = owner;
+	public Account(Long id, BigDecimal balance) {
+		this.id = id;
 		this.balance = balance;
 	}
 	

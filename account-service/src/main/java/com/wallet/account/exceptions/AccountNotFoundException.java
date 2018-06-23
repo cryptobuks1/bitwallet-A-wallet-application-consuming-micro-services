@@ -15,7 +15,7 @@ public class AccountNotFoundException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public AccountNotFoundException(String owner) {
-		super("No account exists for: " + owner);
+	public AccountNotFoundException(Long id) {
+		super("No account exists for: " + id);
 	}
 }
