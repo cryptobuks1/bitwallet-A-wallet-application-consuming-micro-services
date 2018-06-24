@@ -11,8 +11,8 @@ public interface AccountService {
 	
 	public ResponseEntity<?> addAccount(Account account);
 
-	public ResponseEntity<?> withdrawAmount(TransactionDTO transactionDTO);
+	public ResponseEntity<?> withdrawAmount(TransactionDTO transactionDTO) throws Exception;
 	
-	public ResponseEntity<?> depositAmount(TransactionDTO transactionDTO);
+	public ResponseEntity<?> depositAmount(TransactionDTO transactionDTO) throws Exception;
 	
 }

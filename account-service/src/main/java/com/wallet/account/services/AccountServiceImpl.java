@@ -1,8 +1,8 @@
 package com.wallet.account.services;
 
-import java.util.Optional;
 import java.util.logging.Logger;
 
+import javax.naming.OperationNotSupportedException;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import com.wallet.account.domain.Account;
 import com.wallet.account.domain.AccountRepository;
 import com.wallet.account.dto.TransactionDTO;
-import com.wallet.account.exceptions.AccountNotFoundException;
 
 /**
  * Hide the access to the "transaction-service" micro-service inside this local service.
@@ -50,10 +49,8 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public ResponseEntity<Account> findById(Long id) {
-		Optional<Account> account = accountRepository.findById(id);
-		Optional.ofNullable(account).orElseThrow(() -> new AccountNotFoundException(id));
-		
-		return ResponseEntity.ok().body(account.get());
+		Account account = accountRepository.findById(id);
+		return ResponseEntity.ok().body(account);
 	}
 	
 	@Override
@@ -64,23 +61,29 @@ public class AccountServiceImpl implements AccountService {
 	
 	@Override
 	@Transactional
-	public ResponseEntity<?> withdrawAmount(TransactionDTO transactionDTO) {
-		Long accountId = transactionDTO.getAccountId();
-		Optional<Account> optionalAccount = accountRepository.findById(accountId);
-		Optional.ofNullable(optionalAccount).orElseThrow(() -> new AccountNotFoundException(accountId));
-		
-		//accountRepository.save(transactionDTO); use mapper
-		transactionService.save(transactionDTO);
-		//TransactionDTO transaction = transactionService.getTransactionByAccount(accountId);	
-		return ResponseEntity.status(HttpStatus.CREATED).build();
+	public ResponseEntity<?> withdrawAmount(TransactionDTO transactionDTO) throws Exception {
+		Account account = accountRepository.findById(transactionDTO.getAccountId());
+		if(account.getBalance().compareTo(transactionDTO.getAmount()) >= 0) {
+			account.withdraw(transactionDTO.getAmount());
+			accountRepository.save(account);
+			transactionService.save(transactionDTO);
+			return ResponseEntity.status(HttpStatus.OK).build();
+		}
+		else {
+			LOGGER.severe("Insufficient Balance.");
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+		}
 	}
 
 	@Override
 	@Transactional
-	public ResponseEntity<?> depositAmount(TransactionDTO transactionDTO) {
-		return null;
+	public ResponseEntity<?> depositAmount(TransactionDTO transactionDTO) throws Exception {
+		Account account = accountRepository.findById(transactionDTO.getAccountId());
+		account.deposit(transactionDTO.getAmount());
+		accountRepository.save(account);
+		transactionService.save(transactionDTO);
+				
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
-	
-
 	
 }

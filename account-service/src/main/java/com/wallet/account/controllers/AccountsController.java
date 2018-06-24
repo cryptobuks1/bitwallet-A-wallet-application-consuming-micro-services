@@ -56,17 +56,19 @@ public class AccountsController {
 	
 	/**
 	 * REST endpoint to withdraw amount from a given account.
+	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/account/withdraw/", method = RequestMethod.PATCH, produces = "application/json; charset=UTF-8")
-	public ResponseEntity<?> withdrawAmount(@Valid @RequestBody TransactionDTO transactionDto) {
+	public ResponseEntity<?> withdrawAmount(@Valid @RequestBody TransactionDTO transactionDto) throws Exception {
 		return accountService.withdrawAmount(transactionDto);
 	}
 	
 	/**
 	 * REST endpoint to deposit amount in a given account.
+	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/account/deposit/", method = RequestMethod.PATCH, produces = "application/json; charset=UTF-8")
-	public ResponseEntity<?> depositAmount(@Valid @RequestBody TransactionDTO transactionDto) {
+	public ResponseEntity<?> depositAmount(@Valid @RequestBody TransactionDTO transactionDto) throws Exception {
 		return accountService.depositAmount(transactionDto);
 	}
 	
